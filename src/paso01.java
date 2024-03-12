@@ -30,4 +30,3 @@ public class paso01 {
 		}
 	}
 }
-//Esta clase debería crear la conexion y no hacer una consulta (estuvo repitiendo todo lo del viernes y ha decidido separarlo en dos pasos)

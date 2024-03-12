@@ -31,4 +31,3 @@ public class paso02 {
 		}
 	}
 }
-//Esta clase saca el nombre y nif por pantalla no hace nada mas, es decir es la clase de antes metiendole el nif y sacandolo por un mensaje

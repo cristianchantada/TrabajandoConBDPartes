@@ -1,48 +1,34 @@
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import Mensajes.Mensaje;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import controllers.Cliente;
+import models.ClienteDao;
+import java.awt.event.*;
+import static Validacion.Validator.*;
 
-import static PartesFiles.Validator.*;
-
-public class paso04 extends JFrame {
+public class insertarClienteVentana extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	public JTextField txtNIF;
-	private JTextField txtNombre;
-	private JTextField txtCorreo;
-	private JTextField txtTelefono;
+	private JPanel contentPane = new JPanel();
+	private JButton btnInsertar = new JButton("Añadir");
+	public JTextField txtNIF = new JTextField();
+	private JTextField txtNombre = new JTextField();
+	private JTextField txtCorreo = new JTextField();
+	private JTextField txtTelefono = new JTextField();;
 
 	public static void main(String[] args) {
-		new paso04();
+		new insertarClienteVentana();
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public paso04() {
+	public insertarClienteVentana() {
 
 		setBounds(100, 100, 315, 210);
-		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		txtNIF = new JTextField();
+		
 		txtNIF.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -56,12 +42,10 @@ public class paso04 extends JFrame {
 		contentPane.add(txtNIF);
 		txtNIF.setColumns(10);
 
-		txtNombre = new JTextField();
 		txtNombre.setColumns(10);
 		txtNombre.setBounds(88, 52, 158, 20);
 		contentPane.add(txtNombre);
 
-		txtCorreo = new JTextField();
 		txtCorreo.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -76,7 +60,7 @@ public class paso04 extends JFrame {
 		txtCorreo.setBounds(88, 85, 158, 20);
 		contentPane.add(txtCorreo);
 
-		txtTelefono = new JTextField();
+		
 		txtTelefono.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -90,47 +74,26 @@ public class paso04 extends JFrame {
 		txtTelefono.setBounds(88, 116, 158, 20);
 		contentPane.add(txtTelefono);
 
-		JButton btnInsertar = new JButton("Añadir");
+		
 		btnInsertar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				try {
-					Class.forName("com.mysql.cj.jdbc.Driver");
-
-					String url = "jdbc:mysql://localhost:3306/partes";
-					String usuario = "root";
-					String pass = "0000";
-					
-					// b.- Crear tunel de conexión
-					Connection conexion = DriverManager.getConnection(url, usuario, pass);
-					Statement stmt = conexion.createStatement();
-
-					String sql = "insert into clientes(nif, nombre, email, telefono) values ('" + txtNIF.getText()
-							+ "','" + txtNombre.getText() + "','" + txtCorreo.getText() + "','" + txtTelefono.getText()
-							+ "')";
-
-					int rowsAffected = stmt.executeUpdate(sql);
-
-					if (rowsAffected > 0) {
-						Mensaje.verMensaje("Cliente insertado correctamente");
-					} else {
-						Mensaje.verMensaje("Error al insertar cliente");
-					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				}
-
+				Cliente cliente = new Cliente();
+				cliente.setNif(txtNIF.getText());
+				cliente.setNombre(txtNombre.getText());
+				cliente.setCorreo(txtCorreo.getText());
+				cliente.setTelefono(txtTelefono.getText());
+				
+				ClienteDao clienteDao = new ClienteDao();
+				clienteDao.save(cliente);
 			}
-
 		});
-
 		btnInsertar.setBounds(123, 147, 89, 23);
 		contentPane.add(btnInsertar);
 
+		insertarLabels();
+		
 		JLabel lblnif = new JLabel("NIF");
 		lblnif.setBounds(10, 24, 46, 14);
 		contentPane.add(lblnif);
@@ -146,28 +109,13 @@ public class paso04 extends JFrame {
 		JLabel lblTelfono = new JLabel("Teléfono");
 		lblTelfono.setBounds(10, 119, 46, 14);
 		contentPane.add(lblTelfono);
-
+		
 		setVisible(true);
 	}
+	
+	public static void insertarLabels() {
 
-	public void setNIF(String idNIF) {
-		txtNIF.setText(idNIF);
-	}
 
-	public String getNif() {
-		return this.txtNIF.getText();
-	}
-
-	public String getNombre() {
-		return this.txtNombre.getText();
-	}
-
-	public String getEmail() {
-		return this.txtCorreo.getText();
-	}
-
-	public String getTelefono() {
-		return this.txtNIF.getText();
 	}
 
 }
